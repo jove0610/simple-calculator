@@ -4,7 +4,6 @@ import { Container, Grid } from '@mui/material';
 
 import CalculatorDisplay from './components/CalculatorDisplay';
 import CalculatorKeypad from './components/CalculatorKeypad';
-
 import CalculatorProvider from './container/CalculatorProvider';
 
 function App() {
