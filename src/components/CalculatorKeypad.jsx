@@ -2,15 +2,75 @@ import React from 'react';
 
 import CalculatorKey from './CalculatorKey';
 import { useCalculator } from '../container/CalculatorProvider';
+import evaluate from '../helpers/evaluate';
 
 function CalculatorKeypad() {
   const {
-    onClickAC,
-    onClickDel,
-    onClickEvaluate,
-    onClickNum,
-    onClickOperation,
+    shouldOverwrite,
+    currentNum,
+    prevNum,
+    operation,
+    setShouldOverwrite,
+    setCurrentNum,
+    setPrevNum,
+    setOperation,
   } = useCalculator();
+
+  const onClickAC = () => {
+    setCurrentNum('');
+    setPrevNum('');
+    setOperation('');
+  };
+
+  const onClickDel = () => {
+    if (shouldOverwrite) {
+      setCurrentNum('');
+      setShouldOverwrite(false);
+      return;
+    }
+
+    setCurrentNum(currentNum.slice(0, -1));
+  };
+
+  const onClickEvaluate = () => {
+    if ([operation, currentNum, prevNum].includes('')) return;
+
+    setPrevNum('');
+    setCurrentNum(evaluate(prevNum, currentNum, operation));
+    setOperation('');
+    setShouldOverwrite(true);
+  };
+
+  const onClickNum = (num) => {
+    if (shouldOverwrite) {
+      setCurrentNum(num);
+      setShouldOverwrite(false);
+      return;
+    }
+    if (num === '0' && currentNum === '0') return;
+    if (num === '.' && currentNum.includes('.')) return;
+    setCurrentNum(`${currentNum}${num}`);
+  };
+
+  const onClickOperation = (action) => {
+    if (currentNum === '' && prevNum === '') return;
+
+    if (currentNum === '') {
+      setOperation(action);
+      return;
+    }
+
+    if (prevNum === '') {
+      setPrevNum(currentNum);
+      setCurrentNum('');
+      setOperation(action);
+      return;
+    }
+
+    setPrevNum(evaluate(prevNum, currentNum, operation));
+    setCurrentNum('');
+    setOperation(action);
+  };
 
   return (
     <>
