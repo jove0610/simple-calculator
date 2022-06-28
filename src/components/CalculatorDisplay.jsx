@@ -1,24 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-
 import { Grid, Stack, Typography } from '@mui/material';
 
-const IntlFormat = new Intl.NumberFormat('en-us', {
-  maximumFractionDigits: 0,
-});
+import { useCalculator } from '../container/CalculatorProvider';
+import formatNum from '../helpers/formatNum';
 
-const formatNum = (num) => {
-  if (num === '') return null;
-  const [integer, decimal] = num.split('.');
+function CalculatorDisplay() {
+  const { currentNum, prevNum, operation } = useCalculator();
 
-  if (decimal) {
-    return `${IntlFormat.format(integer)}.${decimal}`;
-  }
-
-  return IntlFormat.format(integer);
-};
-
-function CalculatorDisplay({ currentNum, prevNum, operation }) {
   return (
     <Grid item xs={12}>
       <Stack
@@ -49,11 +37,5 @@ function CalculatorDisplay({ currentNum, prevNum, operation }) {
     </Grid>
   );
 }
-
-CalculatorDisplay.propTypes = {
-  currentNum: PropTypes.string.isRequired,
-  prevNum: PropTypes.string.isRequired,
-  operation: PropTypes.string.isRequired,
-};
 
 export default CalculatorDisplay;
